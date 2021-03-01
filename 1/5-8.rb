@@ -42,7 +42,7 @@ end
 
 
 def not_coprime(a, b)
-	return gcd(a, b) == 1
+	return gcd(a, b) != 1
 end
 
 def gcd(a, b)
@@ -63,6 +63,7 @@ def num_of_not_coprimes(num)
 	puts "Num of even not coprimes = #{count}"
 end
 
+
 def max_aliquant(num)
 	max = 0
 	while num > 0 do
@@ -75,6 +76,46 @@ def max_aliquant(num)
 	puts "Maximal aliquant 3 = #{max}"
 end
 
+
+def sum_lesser(num)
+	sum = 0
+	while num > 0 do
+		digit = num % 10
+		if digit < 5
+			sum += num % 10
+			num /= 10
+		end
+	end
+	return sum
+end
+
+def max_not_coprime(num)
+	ld = least_divisor(num.clone)
+	i = num.clone - 1
+	while i > 0
+		if not_coprime(num, i) and i % ld != 0 
+			puts i
+			return i
+		end
+		i -= 1
+	end
+end
+
+def least_divisor(num)
+	i = 2
+	while i < num / 2
+		if num % i == 0
+			puts i
+			return i
+		end
+		i += 1
+	end
+end
+
+def method_3(num)
+	puts "Method 3 = #{max_not_coprime(num.clone) * sum_lesser(num.clone)}"
+end
+
 x = ARGV[0].to_i
 sum(x.clone)
 multi(x.clone)
@@ -82,3 +123,4 @@ minimum(x.clone)
 maximum(x.clone)
 num_of_not_coprimes(x.clone)
 max_aliquant(x.clone)
+method_3(x.clone)

@@ -63,7 +63,17 @@ def num_of_not_coprimes(num)
 	puts "Num of even not coprimes = #{count}"
 end
 
-
+def max_aliquant(num)
+	max = 0
+	while num > 0 do
+		digit = num % 10
+		if digit % 3 != 0 and digit > max 
+			max = digit.clone
+		end
+		num /=10
+	end
+	puts "Maximal aliquant 3 = #{max}"
+end
 
 x = ARGV[0].to_i
 sum(x.clone)
@@ -71,3 +81,4 @@ multi(x.clone)
 minimum(x.clone)
 maximum(x.clone)
 num_of_not_coprimes(x.clone)
+max_aliquant(x.clone)

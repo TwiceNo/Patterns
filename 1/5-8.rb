@@ -4,7 +4,7 @@ def sum(num)
 		sum += num % 10
 		num /= 10
 	end
-	puts "Sum = #{sum}"
+	return sum
 end
 
 
@@ -14,7 +14,7 @@ def multi(num)
 		mul *= num % 10
 		num /= 10
 	end
-	puts "Multiplication = #{mul}"
+	return mul
 end
 
 
@@ -27,7 +27,7 @@ def minimum(num)
 		end
 		num /=10
 	end
-	puts "Minimal = #{min}"
+	return min
 end
 
 
@@ -40,7 +40,7 @@ def maximum(num)
 		end
 		num /=10
 	end
-	puts "Maximal = #{max}"
+	return max
 end
 
 
@@ -108,5 +108,44 @@ def method_3(num)
 end
 
 
-x = ARGV[0].to_i
-puts method_3(x)
+def process(num, par)
+	case par
+	when 0
+		puts "Help:\n"
+		puts "1 -- sum of digits"
+		puts "2 -- multiplication of digits"
+		puts "3 -- minimal digit"
+		puts "4 -- maximal digit"
+		puts "5 -- amount of not coprime even numbers"
+		puts "6 -- maximal digit aliquant 3"
+		puts "7 -- method 3"
+		puts 
+	when 1
+		puts "Sum of digits: #{sum(num)}"
+	when 2
+		puts "Multiplication of digits: #{multi(num)}"
+	when 3
+		puts "Minimal digit: #{minimum(num)}"
+	when 4
+		puts "Maximal digit: #{maximum(num)}"
+	when 5
+		puts "Amount of not coprime even numbers: #{not_coprime(num)}"
+	when 6
+		puts "Maximal digit aliquant 3: #{aliquant(num)}"
+	when 7 
+		puts "Method 3: #{method_3(num)}"
+	else
+		puts "Unknown operation. Put 0 for Help."
+	end
+end
+
+
+if ARGV.length < 2
+	puts "Hello, World!"
+else
+	x = ARGV[0].to_i
+	param = ARGV[1, ARGV.length - 1].map {|p| p.to_i}
+	for par in param do
+		process(x, par)
+	end
+end

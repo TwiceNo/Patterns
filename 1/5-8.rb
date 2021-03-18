@@ -68,5 +68,45 @@ def aliquant(num)
 end
 
 
+def least_divisor(num)
+	for i in 2..num / 2 do
+		if num % i == 0
+			return i
+		end
+	end
+	return 1
+end
+
+
+def factor(num)
+	least = least_divisor(num)
+	f = num - 1
+	while f > 0
+		if (num.gcd f) != 1 and f % least != 0 
+			return f
+		end
+		f -= 1
+	end
+end
+
+
+def lesser(num)
+	sum = 0
+	while num > 0 do
+		digit = num % 10
+		if digit < 5
+			sum += digit
+		end
+		num /= 10
+	end
+	return sum
+end
+
+
+def method_3(num)
+	return factor(num) * lesser(num)
+end
+
+
 x = ARGV[0].to_i
-puts aliquant(x)
+puts method_3(x)

@@ -19,7 +19,9 @@ def from_keyboard()
 	n = ARGV[0].to_i
 	arr = Array.new() 
 	n.times do |i|
-		arr.insert(i, STDIN.gets.to_i)
+		tmp = []
+		tmp.push(STDIN.gets.to_i)
+		arr.concat(tmp)
 	end
 	return arr
 end

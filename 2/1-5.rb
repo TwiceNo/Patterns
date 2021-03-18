@@ -16,17 +16,15 @@ end
 
 
 def from_keyboard()
-	n = ARGV[0].to_i
-	arr = Array.new() 
-	n.times do |i|
-		tmp = []
-		tmp.push(STDIN.gets.to_i)
-		arr.concat(tmp)
-	end
-	return arr
+	return Array.new(ARGV[0].to_i) { STDIN.gets.to_i }
 end
 
-arr = from_keyboard()
+def from_file(filename)
+	text = File.open(filename, "r") {|file| file.read.split("\n")}
+	return text.map {|el| el.to_i}
+end
+
+arr = from_file("file.txt")
 
 puts "Minimum: #{minimum(arr)}"
 puts "Maximum: #{maximum(arr)}"

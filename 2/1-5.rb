@@ -16,7 +16,11 @@ end
 
 
 def from_keyboard()
-	arr = Array.new(ARGV[0].to_i) { STDIN.gets.to_i }
+	n = ARGV[0].to_i
+	arr = Array.new() 
+	n.times do 
+		arr.push(STDIN.gets.to_i)
+	end
 	return arr
 end
 

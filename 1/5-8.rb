@@ -55,12 +55,18 @@ def not_coprime(num)
 end
 
 
-
+def aliquant(num)
+	max = 0
+	while num > 0 do
+		digit = num % 10
+		if digit > max and digit % 3 != 0
+			max = digit
+		end
+		num /=10
+	end
+	return max
+end
 
 
 x = ARGV[0].to_i
-# sum(x.clone)
-# multi(x.clone)
-# minimum(x.clone)
-# maximum(x.clone)
-puts not_coprime(x)
+puts aliquant(x)

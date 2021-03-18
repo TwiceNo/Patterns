@@ -15,11 +15,12 @@ def product(arr)
 end
 
 
-puts "Length:"
-n = gets.to_i
+def from_keyboard()
+	arr = Array.new(ARGV[0].to_i) { STDIN.gets.to_i }
+	return arr
+end
 
-puts "Elements:"
-arr = Array.new(n) {gets.to_i}
+arr = from_keyboard()
 
 puts "Minimum: #{minimum(arr)}"
 puts "Maximum: #{maximum(arr)}"

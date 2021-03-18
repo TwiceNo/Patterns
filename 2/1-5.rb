@@ -17,9 +17,9 @@ end
 
 def from_keyboard()
 	n = ARGV[0].to_i
-	arr = Array.new() 
-	n.times do 
-		arr.push(STDIN.gets.to_i)
+	arr = Array.new(n) 
+	n.times do |i|
+		arr[i] = STDIN.gets.to_i
 	end
 	return arr
 end

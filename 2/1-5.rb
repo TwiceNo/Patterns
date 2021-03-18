@@ -1,37 +1,17 @@
 def minimum(arr)
-	min = arr[0]
-	for el in arr do
-		if el < min
-			min = el
-		end
-	end
-	return min
+	return arr.min
 end
 
 def maximum(arr)
-	max = arr[0]
-	for el in arr do
-		if el > max
-			max = el
-		end
-	end
-	return max
+	return arr.max
 end
 
 def sum(arr)
-	s = 0
-	for el in arr do
-		s += el
-	end
-	return s
+	return arr.sum
 end
 
 def product(arr)
-	prod = 1
-	for el in arr do
-		prod *= el
-	end
-	return prod
+	return arr.inject(1) {|res, el| res * el}
 end
 
 

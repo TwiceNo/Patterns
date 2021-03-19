@@ -15,8 +15,8 @@ def product(arr)
 end
 
 
-def from_keyboard()
-	return Array.new(ARGV[0].to_i) { STDIN.gets.to_i }
+def from_keyboard(n)
+	return Array.new(n) { STDIN.gets.to_i }
 end
 
 def from_file(filename)
@@ -24,9 +24,23 @@ def from_file(filename)
 	return text.map {|el| el.to_i}
 end
 
-arr = from_file("file.txt")
+def process(arr)
+	puts "Minimum: #{minimum(arr)}"
+	puts "Maximum: #{maximum(arr)}"
+	puts "Sum: #{sum(arr)}"
+	puts "Product: #{product(arr)}"
+end
 
-puts "Minimum: #{minimum(arr)}"
-puts "Maximum: #{maximum(arr)}"
-puts "Sum: #{sum(arr)}"
-puts "Product: #{product(arr)}"
+
+if ARGV.length < 2
+	puts "Arguments Error"
+	puts
+	puts "From file: 0 <filename>"
+	puts "From keyboard: 1 <array lentgh>"
+else
+	if ARGV[0].to_i == 0 and File.file?(ARGV[1])
+		process(from_file(ARGV[1]))
+	elsif ARGV[0].to_i == 1 and ARGV[1].upcase == ARGV[1].downcase
+		process(from_keyboard(ARGV[1].to_i))
+	end
+end

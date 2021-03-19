@@ -10,9 +10,17 @@ def coincident(a, b)
 	return count
 end
 
+def relate(arr, a, b)
+	tmp = Array.new()
+	for el in arr do
+		if el > a and el < b
+			tmp.push(el)
+		end
+	end
+	return tmp
+end
+
 
 a = Array.new(5) { STDIN.gets.to_i }
 puts
-b = Array.new(5) { STDIN.gets.to_i }
-
-puts coincident(a, b)
+puts relate(a, STDIN.gets.to_i, STDIN.gets.to_i)

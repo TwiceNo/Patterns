@@ -33,7 +33,26 @@ def positive_negative(arr)
 	return positive.concat(negative)
 end
 
+def element_as_sum(arr)
+	count = 0
+	n = arr.length
+	for i in 0...n do
+		for j in 0...n do
+			for k in j...n do
+				if i != k and 
+				   i != j and 
+				   j != k and 
+				   arr[i] == arr[j] + arr[k]
+					count += 1
+				end
+			end
+		end
+	end
+	return count
+end
+
+
 
 a = Array.new(5) { STDIN.gets.to_i }
 puts
-puts positive_negative(a)
+puts element_as_sum(a)

@@ -20,7 +20,20 @@ def relate(arr, a, b)
 	return tmp
 end
 
+def positive_negative(arr)
+	positive = Array.new()
+	negative = Array.new()
+	for el in arr do
+		if el > 0
+			positive.push(el)
+		elsif el < 0
+			negative.push(el)
+		end
+	end
+	return positive.concat(negative)
+end
+
 
 a = Array.new(5) { STDIN.gets.to_i }
 puts
-puts relate(a, STDIN.gets.to_i, STDIN.gets.to_i)
+puts positive_negative(a)

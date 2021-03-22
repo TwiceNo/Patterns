@@ -16,8 +16,11 @@ def words_count(line)
 	return line.split(" "). length
 end
 
+def unique_digits(line)
+	return line.chars.uniq.length
+end
+
 puts "Enter line:"
 line = STDIN.gets.chomp
 
-print "words: "
-puts words_count(line)
+puts unique_digits(line)

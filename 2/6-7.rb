@@ -18,6 +18,21 @@ def element_as_sum(arr)
 	return arr.map { |el| (arr - [el]).combination(2).map { |e| e.sum }.include? (el) }.count true
 end
 
+def locals(arr, a, b)
+	temp = []
+	for i in 1...arr.length - 1 do
+		if arr[i] < arr[i - 1] and arr[i] < arr[i + 1]
+			temp.push(arr[i])
+		end
+	end
+	count = 0
+	temp.each do |el|
+		if el > a and el < b
+			count += 1
+		end
+	end
+	return count
+end
 
 def from_file(filename)
 	text = File.open(filename, "r") {|file| file.read.split("\n")}
@@ -42,6 +57,10 @@ def process(param, a, b)
 		else
 			puts coincident(b, a)
 		end
+	when 22
+		interval = get_interval()
+		print show(5)
+		puts locals(a, interval[0], interval[1])
 	when 34
 		interval = get_interval()
 		print show(1)
@@ -54,24 +73,26 @@ def process(param, a, b)
 		print 
 		puts element_as_sum(a)
 	else
-		puts show(5)
+		puts show(param)
 	end
 end
 
 def show(line)
 	case line
 	when 0
-		return "Amount of coincident elements: "
+		"Amount of coincident elements: "
 	when 1
-		return "Elements belonging to the interval: "
+		"Elements belonging to the interval: "
 	when 2
-		return "Positive:"
+		"Positive:"
 	when 3
-		return "Negative:"
+		"Negative:"
 	when 4
-		return "Amount of elements that can be obtained as the sum: "
+		"Amount of elements that can be obtained as the sum: "
 	when 5 
-		return "Unknown task"
+		"Locals minimums in interval: " 
+	else
+		"Unknown task"
 	end
 end
 

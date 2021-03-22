@@ -12,8 +12,12 @@ def palindrome(line)
 	return line == line.reverse
 end
 
+def words_count(line)
+	return line.split(" "). length
+end
+
 puts "Enter line:"
 line = STDIN.gets.chomp
 
-print "Is palindrome: "
-puts palindrome(line)
+print "words: "
+puts words_count(line)

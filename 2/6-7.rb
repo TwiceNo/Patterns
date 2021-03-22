@@ -36,7 +36,7 @@ def process(param, a, b)
 	puts param
 	case param
 	when 10
-		print "Amount of coincident elements: "
+		print show(0)
 		if a.length <= b.length
 			puts coincident(a, b)
 		else
@@ -44,19 +44,37 @@ def process(param, a, b)
 		end
 	when 34
 		interval = get_interval()
-		print "Elements belonging to the interval: "
+		print show(1)
 		p relate(a, interval[0], interval[1])
 	when 46
 		tmp = positive_negative(a)
-		print "Positive:"; p tmp[0]
-		print "Negative:"; p tmp[1]
+		print show(2); p tmp[0]
+		print show(3); p tmp[1]
 	when 58
-		print "Amount of elements that can be obtained as the sum: "
+		print 
 		puts element_as_sum(a)
 	else
-		puts "Unknown task"
+		puts show(5)
 	end
 end
+
+def show(line)
+	case line
+	when 0
+		return "Amount of coincident elements: "
+	when 1
+		return "Elements belonging to the interval: "
+	when 2
+		return "Positive:"
+	when 3
+		return "Negative:"
+	when 4
+		return "Amount of elements that can be obtained as the sum: "
+	when 5 
+		return "Unknown task"
+	end
+end
+
 
 
 a = from_file("a.txt")

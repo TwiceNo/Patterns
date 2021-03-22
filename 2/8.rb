@@ -24,21 +24,32 @@ end
 def process(param, line)
 	print "\nTask "
 	puts param
+	print show(param)
 	case param
 	when 0
-		print "Max: "
 		puts max(to_array(line))
 	when 4
-		print "Is palindrome: "
 		puts palindrome(line)
 	when 11
-		print "Words: "
 		puts words_count(line)
 	when 15
-		print "Unique digits: "
 		puts unique_digits(line)
+	end
+end
+
+
+def show(line)
+	case line
+	when 0
+		"Max: "
+	when 4
+		"Is palindrome: "
+	when 11
+		"Words: "
+	when 15
+		"Unique digits: "
 	else
-		puts "Unknown task"
+		"Unknown task\n"
 	end
 end
 

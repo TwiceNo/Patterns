@@ -6,11 +6,10 @@ def by_length(lines)
 	lines.sort_by { |line| line.length }
 end
 
-def print_lines(lines)
-	lines.length.times do |line|
-		puts line
-	end
+def by_words(lines)
+	lines.sort_by { |line| line.split(" ").length }
 end
 
+
 lines = from_file("text.txt")
-puts by_length(lines)
+puts by_words(lines)

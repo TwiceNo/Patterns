@@ -19,19 +19,7 @@ def element_as_sum(arr)
 end
 
 def locals(arr, a, b)
-	temp = []
-	for i in 1...arr.length - 1 do
-		if arr[i] < arr[i - 1] and arr[i] < arr[i + 1]
-			temp.push(arr[i])
-		end
-	end
-	count = 0
-	temp.each do |el|
-		if el > a and el < b
-			count += 1
-		end
-	end
-	return count
+	arr.select.with_index { |x, idx| arr[idx - 1] > x and x < arr[idx + 1] and x > a and x < b }.length
 end
 
 def from_file(filename)

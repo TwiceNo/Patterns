@@ -20,7 +20,32 @@ def unique_digits(line)
 	return line.chars.uniq.length
 end
 
+
+def process(param, line)
+	print "\nTask "
+	puts param
+	case param
+	when 0
+		print "Max: "
+		puts max(to_array(line))
+	when 4
+		print "Is palindrome: "
+		puts palindrome(line)
+	when 11
+		print "Words: "
+		puts words_count(line)
+	when 15
+		print "Unique digits: "
+		puts unique_digits(line)
+	else
+		puts "Unknown task"
+	end
+end
+
+
 puts "Enter line:"
 line = STDIN.gets.chomp
 
-puts unique_digits(line)
+for el in ARGV do
+	process(el.to_i, line)
+end

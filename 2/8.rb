@@ -1,3 +1,5 @@
+#4 11 15
+
 def max(arr)
 	return arr.max
 end
@@ -6,8 +8,12 @@ def to_array(line)
 	return line.split(" ").map { |e| e.to_i }
 end
 
-puts "Enter line:"
-line = STDIN.gets
+def palindrome(line)
+	return line == line.reverse
+end
 
-print "Max: "
-puts max(to_array(line))
+puts "Enter line:"
+line = STDIN.gets.chomp
+
+print "Is palindrome: "
+puts palindrome(line)

@@ -51,13 +51,22 @@ def by_ascii_code(lines)
 			|letter| letter.ord }.ord, mirror_codes(line.chars)) }
 end
 
+def triads(line)
+	line[1...-1].select.with_index { |value, idx| line[idx - 1] == line[idx + 1]}.count
+end
 
-vowels = ["a", "e", "i", "o", "u"] 
+def by_triads(lines)
+	lines.sort_by { |line| triads(line.chars) }
+end
+
+
+vowels = %w[a e i o u]
 consonants = ("a".."z").to_a.reject { |e| vowels.include? e }
 frequency = from_file("frequency.txt").map { |line| 
 	line.split(" ") }.to_h.transform_values { |v| v.to_f }
 
-lines = from_file("text2.txt")
+lines = from_file("text.txt")
 
 puts lines
-puts by_ascii_code(lines)
+puts
+puts by_triads(lines)

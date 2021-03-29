@@ -1,6 +1,5 @@
+abcdefe
 aaaaaaa
-bbbbbbb
-aaabbbb
-aaaabbb
-aabbbbb
-aaaaabb
+bbbcbad
+adacabb
+abcdefg

@@ -8,7 +8,11 @@ def lesser_than(line)
   line.scan(/[0-4]/).count
 end
 
+def unused(line)
+  ("a".."z").to_a.reject { |letter| line.scan(/[a-zA-Z]/).include? letter }
+end
+
 puts "Enter line:"
 line = gets.chomp
 puts
-p lesser_than(line)
+p unused(line)

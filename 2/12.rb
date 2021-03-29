@@ -31,9 +31,24 @@ def most_frequent(line)
 		[letter, line.count(letter).to_f / line.length] } ].max_by { |key, value| value }
 end
 
-def standard_deviation(lines, frequency)
+def standard_deviation(a, b)
+	Math.sqrt((a ** 2 - b ** 2).abs)
+end
+
+def by_frequent(lines, frequency)
 	lines.sort_by { |line, result = most_frequent(to_alpha(line.downcase.chars))| 
-		Math.sqrt((result[1] ** 2 - frequency[result[0]] ** 2).abs) }
+		standard_deviation(result[1], frequency[result[0]]) }
+end
+
+def mirror_codes(line)
+	mirror = line.map { |e| e.ord }.reject.with_index { |idx| line[idx] != line[-idx] }
+	mirror.sum
+end
+
+def by_ascii_code(lines)
+	lines.sort_by { 
+		|line| standard_deviation(line.chars.max_by { 
+			|letter| letter.ord }.ord, mirror_codes(line.chars)) }
 end
 
 
@@ -42,11 +57,7 @@ consonants = ("a".."z").to_a.reject { |e| vowels.include? e }
 frequency = from_file("frequency.txt").map { |line| 
 	line.split(" ") }.to_h.transform_values { |v| v.to_f }
 
-lines = from_file("text.txt")
+lines = from_file("text2.txt")
 
 puts lines
-puts standard_deviation(lines, frequency)
-puts most_frequent(to_alpha(lines[0].downcase.chars))
-puts most_frequent(to_alpha(lines[1].downcase.chars))
-puts most_frequent(to_alpha(lines[2].downcase.chars))
-puts most_frequent(to_alpha(lines[3].downcase.chars))
+puts by_ascii_code(lines)

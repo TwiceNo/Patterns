@@ -12,6 +12,10 @@ def unused(line)
   ("a".."z").to_a.reject { |letter| line.scan(/[a-zA-Z]/).include? letter }
 end
 
+def greater_than(line)
+  line.scan(/[6-9]/).count
+end
+
 puts "Enter line:"
 line = gets.chomp
 puts

@@ -97,7 +97,7 @@ class Employee
 	end
 
 	def name_validation(name)
-		name =~ /(([а-я]+)(( *\-+ *)?([а-я]+)?) *){2} *(([а-я]+)( *([а-я]+)?))/i
+		name =~ /(([а-яё]+)(( *\-+ *)?([а-яё]+)?) *){2} *(([а-яё]+)( *([а-яё]+)?))/i
 	end
 
 	#--------------------
@@ -110,7 +110,7 @@ class Employee
 	end
 
 	def reformat_name(name)
-		words = name.scan(/([а-я]+)|(\-+)/i).flatten.compact.map { |el| el =~ /\-+/ ? "-" : el.capitalize }
+		words = name.scan(/([а-яё]+)|(\-+)/i).flatten.compact.map { |el| el =~ /\-+/ ? "-" : el.capitalize }
 		indices = words.map.with_index { |el, i| i if el == "-" }.compact
 		indices.each do |index|
 			words[index - 1] = words[index - 1 .. index + 1].join()
@@ -162,6 +162,6 @@ end
 
 require_relative 'generate_person'
 test = TestEmployee.new
-test.new_person(1)
+test.new_person(32)
 test.show
 

@@ -1,21 +1,18 @@
 class Employee
-  attr_accessor(:employee_name,
-                :birthdate,
-                :address,
+  attr_accessor(:address,
                 :passport,
                 :speciality,
                 :experience,
                 :last_job,
                 :last_speciality,
                 :salary)
-	attr_reader :phone, :email, :employee_name
+	attr_reader :phone, :email, :employee_name, :birthdate
 
 	#--------------------
 	#------Override------
 	#--------------------
 
 	def initialize(name, bdate, phone, address, email, passport, spec, exp, ljob = nil, lspec = nil, sal = nil)
-		@birthdate     = bdate
 		@address       = address
 		@passport      = passport
 		@speciality    = spec
@@ -28,6 +25,7 @@ class Employee
 		self.phone = phone
 		self.email = email
 		self.employee_name = name
+		self.birthdate = bdate
 	end
 
 
@@ -53,6 +51,8 @@ class Employee
 			puts "Invalid email"
 		when 3
 			puts "Invalid name"
+		when 4
+			puts "Invalid date"
 		end
 	end
 
@@ -84,6 +84,14 @@ class Employee
 		end
 	end
 
+	def birthdate= (date)
+		if date_validation(date)
+			@birthdate = reformat_date(date)
+		else
+			self.exception(4)
+		end
+ end
+
 	#--------------------
 	#-----Validation-----
 	#--------------------
@@ -98,6 +106,10 @@ class Employee
 
 	def name_validation(name)
 		name =~ /(([а-яё]+)(( *\-+ *)?([а-яё]+)?) *){2} *(([а-яё]+)( *([а-яё]+)?))/i
+	end
+
+	def date_validation(date)
+		date =~ /((0?[1-9])|([1-2][0-9])|(3[0-1]))\.((0?[1-9])|(1[0-2]))\.(([1-2][0-9])?[0-9]{2})/
 	end
 
 	#--------------------
@@ -122,6 +134,15 @@ class Employee
 			words[-1].downcase!
 		end
 		words.join(" ")
+	end
+
+	def reformat_date(date)
+		date = date.split(".")
+		date.map! { |el| el.length == 1 ? "0%s" % [el] : el}
+		if date[-1].length == 2
+			date[-1] = "19" + date[-1]
+		end
+		date.join(".")
 	end
 
 end

@@ -1,12 +1,11 @@
 class Employee
   attr_accessor(:address,
-                :passport,
                 :speciality,
                 :experience,
                 :last_job,
                 :last_speciality,
                 :salary)
-	attr_reader :phone, :email, :employee_name, :birthdate
+	attr_reader :phone, :email, :employee_name, :birthdate, :passport
 
 	#--------------------
 	#------Override------
@@ -14,7 +13,6 @@ class Employee
 
 	def initialize(name, bdate, phone, address, email, passport, spec, exp, ljob = nil, lspec = nil, sal = nil)
 		@address       = address
-		@passport      = passport
 		@speciality    = spec
 		@experience    = exp
 		if exp > 0
@@ -26,6 +24,7 @@ class Employee
 		self.email = email
 		self.employee_name = name
 		self.birthdate = bdate
+		self.passport = passport
 	end
 
 
@@ -53,6 +52,8 @@ class Employee
 			puts "Invalid name"
 		when 4
 			puts "Invalid date"
+		when 5
+			puts "Invalid passport"
 		end
 	end
 
@@ -92,6 +93,15 @@ class Employee
 		end
  end
 
+	def passport= (passport)
+		if passport_validation(passport)
+			@passport = reformat_passport(passport.chars)
+		else
+			self.exception(5)
+		end
+	end
+
+
 	#--------------------
 	#-----Validation-----
 	#--------------------
@@ -111,6 +121,11 @@ class Employee
 	def date_validation(date)
 		date =~ /((0?[1-9])|([1-2][0-9])|(3[0-1]))\.((0?[1-9])|(1[0-2]))\.(([1-2][0-9])?[0-9]{2})/
 	end
+
+	def passport_validation(passport)
+		passport =~ /([0-9]{2} *){2} +[0-9]{6}/
+	end
+
 
 	#--------------------
 	#------Reformat------
@@ -143,6 +158,11 @@ class Employee
 			date[-1] = "19" + date[-1]
 		end
 		date.join(".")
+	end
+
+	def reformat_passport(passport)
+		passport.reject! { |el| el == " " }
+		[passport[0...4].join(), passport[4..].join()].join(" ")
 	end
 
 end

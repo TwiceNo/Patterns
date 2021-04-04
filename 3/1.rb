@@ -2,14 +2,13 @@ class Employee
   attr_accessor(:employee_name,
                 :birthdate,
                 :address,
-                :email,
                 :passport,
                 :speciality,
                 :experience,
                 :last_job,
                 :last_speciality,
                 :salary)
-	attr_reader :phone
+	attr_reader :phone, :email
 
 	#--------------------
 	#------Override------
@@ -19,7 +18,6 @@ class Employee
 		@employee_name = name
 		@birthdate     = bdate
 		@address       = address
-		@email         = email
 		@passport      = passport
 		@speciality    = spec
 		@experience    = exp
@@ -29,6 +27,7 @@ class Employee
 			@salary = sal
 		end
 		self.phone = phone
+		self.email = email
 	end
 
 
@@ -50,6 +49,8 @@ class Employee
 		case error
 		when 1
 			puts "Invalid phone number"
+		when 2
+			puts "Invalid email"
 		end
 	end
 
@@ -65,6 +66,13 @@ class Employee
 		end
 	end
 
+	def email= (email)
+		if email_validation(email)
+			@email = email.downcase
+		else
+			self.exception(2)
+		end
+	end
 
 	#--------------------
 	#-----Validation-----
@@ -77,6 +85,10 @@ class Employee
 	def reformat(number)
 		number.chars.reject! {|el| el =~ /[^\d]/}
 		"#{number[0]}-#{number[1..3]}-#{number[4..]}"
+	end
+
+	def email_validation(email)
+		email =~ /.+@.+\..+/i
 	end
 
 end

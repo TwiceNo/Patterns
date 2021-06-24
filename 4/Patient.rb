@@ -19,41 +19,78 @@ class Patient
     if @patronymic
       line += "Patronymic: #{self.patronymic}\n"
     end
-    line += "Birthdate: #{self.birthdate}\n"
+    line += "Birthdate: #{self.birthdate}\n\n"
     line
   end
 
+
   def self.surname=(surname)
-    if surname =~ /[а-я]+( *\- *[а-я]+)?"/i
-      @surname = self.reformat(surname)
+    @surname = self.surname_set(surname)
+  end
+
+  def surname=(surname)
+    @surname = self.class.surname_set(surname)
+  end
+
+  def self.surname_set(surname)
+    if surname =~ /^ *[а-я]+( *\- *[а-я]+)? *$/i
+      self.reformat(surname)
     else
       raise "Invalid surname"
     end
   end
 
+
   def self.name=(name)
-    if name =~ /[а-я]+( *\- *[а-я]+)?"/i
-      @name = self.reformat(name)
+    @name = self.name_set(name)
+  end
+
+  def name=(name)
+    @name = self.class.name_set(name)
+  end
+
+  def self.name_set(name)
+    if name =~ /^ *[а-я]+( *\- *[а-я]+)? *$/i
+      self.reformat(name)
     else
       raise "Invalid name"
     end
   end
 
+
   def self.patronymic=(patronymic)
-    if patronymic =~ /[а-я]+( *[а-я]+)?"/i
-      @patronymic = self.reformat(patronymic)
+    @patronymic = self.patronymic_set(patronymic)
+  end
+
+  def patronymic=(patronymic)
+    @patronymic = self.class.patronymic_set(patronymic)
+  end
+
+  def self.patronymic_set(patronymic)
+    if patronymic =~ /^ *[а-я]+( *[а-я]+)? *$/i
+      self.reformat(patronymic)
     else
       raise "Invalid patronymic"
     end
   end
 
+
   def self.birthdate=(date)
-    if date =~ /^((0?\d)|([1-2]\d)|(3[0-1]))\.((0?[1-9])|(1[0-2]))\.(([1-2]\d)?\d{2})/
-      @birthdate = self.reformat_date(date)
+    @birthdate = self.birthdate_set(date)
+  end
+
+  def birthdate=(date)
+    @birthdate = self.class.birthdate_set(date)
+  end
+
+  def self.birthdate_set(date)
+    if date =~ /^ *((0?\d)|([1-2]\d)|(3[0-1]))\.((0?[1-9])|(1[0-2]))\.(([1-2]\d)?\d{2}) *$/
+      self.reformat_date(date)
     else
       raise "Invalid date"
     end
   end
+
 
   def self.reformat(line)
     line = line.scan(/([а-я]+)|(\-+)/i).flatten.compact
@@ -75,7 +112,7 @@ class Patient
     if date[-1].length == 2
       date[-1] = "19" + date[-1]
     end
-    return date.join(".")
+    date.join(".")
   end
 
 end

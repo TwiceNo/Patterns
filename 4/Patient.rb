@@ -1,5 +1,8 @@
+require 'json'
+
 class Patient
-  attr_accessor(:surname,
+  attr_accessor(:id,
+                :surname,
                 :name,
                 :patronymic,
                 :birthdate)
@@ -14,15 +17,42 @@ class Patient
   end
 
   def to_s
-    line = "Surname: #{self.surname}\n" +
+    line = ""
+    if @id
+      line += "ID: #{self.id}\n"
+    end
+    line += "Surname: #{self.surname}\n" +
       "Name: #{self.name}\n"
     if @patronymic
       line += "Patronymic: #{self.patronymic}\n"
     end
-    line += "Birthdate: #{self.birthdate}\n\n"
+    line += "Birthdate: #{self.birthdate}\n"
     line
   end
 
+  def to_json
+    hash = {}
+    self.instance_variables.each do |var|
+      hash[var] = self.instance_variable_get var
+    end
+    hash.to_json
+  end
+
+  def self.from_json(json_string)
+    # JSON.load(json_string).each do |el, var|
+    #   self.instance_variable_set el, var
+    # end
+    data = JSON.load(json_string)
+    inst = self.new(surname = data["@surname"], name = data["@name"], birthdate = data["@birthdate"])
+    keys = data.each_key
+    if keys.include? "@patronymic"
+      inst.patronymic = data["@patronymic"]
+    end
+    if keys.include? "@id"
+      inst.id = data["@id"]
+    end
+    inst
+  end
 
   def self.surname=(surname)
     @surname = self.surname_set(surname)
@@ -114,5 +144,4 @@ class Patient
     end
     date.join(".")
   end
-
 end

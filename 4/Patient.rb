@@ -1,3 +1,4 @@
+
 require 'json'
 
 class Patient
@@ -8,12 +9,12 @@ class Patient
                 :birthdate)
 
   def initialize(surname, name, patronymic = nil, birthdate)
-    self.surname = surname
-    self.name = name
+    self.surname= surname
+    self.name= name
     if patronymic
-      self.patronymic = patronymic
+      self.patronymic= patronymic
     end
-    self.birthdate = birthdate
+    self.birthdate= birthdate
   end
 
   def to_s
@@ -54,12 +55,9 @@ class Patient
     inst
   end
 
-  def self.surname=(surname)
-    @surname = self.surname_set(surname)
-  end
 
   def surname=(surname)
-    @surname = self.class.surname_set(surname)
+    @surname = Patient.surname_set(surname)
   end
 
   def self.surname_set(surname)

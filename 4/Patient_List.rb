@@ -1,5 +1,6 @@
 require_relative 'Patient'
 require 'json'
+require 'date'
 
 
 class Patient_List
@@ -72,18 +73,23 @@ class Patient_List
     @patients.delete(self.find_by(0, @current))
   end
 
+  def show
+    @patients
+  end
+
   def sort_by(field)
     case field
     when 0
-      @patients.sort {|el| el.id}
+      @patients.sort_by {|el| el.id}
     when 1
-      @patients.sort {|el| el.surname}
+      @patients.sort_by {|el| el.surname}
     when 2
-      @patients.sort {|el| el.name}
+      @patients.sort_by {|el| el.name}
     when 3
-      @patients.sort {|el| el.patronymic}
+      list = @patients.select {|el| el.patronymic != nil}
+      list.sort_by {|el| el.patronymic}
     when 4
-      @patients.sort {|el| el.birthdate}
+      @patients.sort_by {|el| DateTime.parse(el.birthdate)}
     end
   end
 
@@ -92,13 +98,13 @@ class Patient_List
     when 0
       @patients.find {|el| el.id = data}
     when 1
-      @patients.find_all {|el| el.surname = data}
+      @patients.find_all {|el| el.surname.downcase.include?data.downcase}
     when 2
-      @patients.find_all {|el| el.name = data}
+      @patients.find_all {|el| el.name.downcase.include?data.downcase}
     when 3
-      @patients.find_all {|el| el.patronymic = data}
+      @patients.find_all {|el| el.patronymic and el.patronymic.downcase.include?data.downcase}
     when 4
-      @patients.find_all {|el| el.birthdate = data}
+      @patients.find_all {|el| el.birthdate.downcase.include?data.downcase}
     end
   end
 

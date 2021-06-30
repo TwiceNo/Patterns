@@ -1,4 +1,5 @@
 require_relative 'Patient'
+require_relative 'DB_Connection'
 require 'json'
 require 'date'
 
@@ -10,6 +11,7 @@ class Patient_List
 
   def initialize
     @filename = "data/patients.json"
+    @db_connection = DB_Connection.get_instance
     @patients = self.read
   end
 
@@ -29,10 +31,21 @@ class Patient_List
   end
 
   def read
-    if not File.exist?(@filename)
-      Array.new()
-    else
-      self.from_json(File.read(@filename))
+    begin
+      result = @db_connection.read_patients
+      if result
+        list = Array.new()
+        result.each do |el|
+          list.append(Patient.from_database(el))
+        end
+        list
+      else
+        if not File.exist?(@filename)
+          Array.new()
+        else
+          self.from_json(File.read(@filename))
+        end
+      end
     end
   end
 
@@ -40,14 +53,21 @@ class Patient_List
     File.write(@filename, self.to_json)
   end
 
+  def set_current(id)
+    if self.find_by(0, id)
+      @current = id
+    end
+  end
+
   def add(data)
     begin
-      id = @patients.length == 0 ? 1 : @patients.max {|el| el.id}.id + 1
-      @patients.append(Patient.new(*data))
-      @patients[-1].id = id
+      inst = Patient.new(*data)
+      @db_connection.add_patient(inst)
+      inst.id = @db_connection.get_id
+      @patients.append(inst)
     rescue
       self.write
-      raise "An exception occurred. Your progress was saved"
+      raise "An exception occurred"
     end
   end
 
@@ -55,15 +75,19 @@ class Patient_List
     begin
       if surname
         self.find_by(0, @current).surname = surname
+        @db_connection.edit_patient(@current, "surname", self.find_by(0, @current).surname)
       end
       if name
-        self.find_by(0, @current).surname = name
+        self.find_by(0, @current).name = name
+        @db_connection.edit_patient(@current, "name", self.find_by(0, @current).name)
       end
       if patronymic
-        self.find_by(0, @current).surname = patronymic
+        self.find_by(0, @current).patronymic = patronymic
+        @db_connection.edit_patient(@current, "patronymic", self.find_by(0, @current).patronymic)
       end
       if birthdate
-        self.find_by(0, @current).surname = birthdate
+        self.find_by(0, @current).birthdate = birthdate
+        @db_connection.edit_patient(@current, "birthdate", Date.parse(self.find_by(0, @current).birthdate))
       end
     rescue
     end
@@ -71,6 +95,7 @@ class Patient_List
 
   def delete
     @patients.delete(self.find_by(0, @current))
+    @db_connection.delete_patient(@current)
   end
 
   def show
@@ -96,7 +121,7 @@ class Patient_List
   def find_by(field, data)
     case field
     when 0
-      @patients.find {|el| el.id = data}
+      @patients.find {|el| el.id == data}
     when 1
       @patients.find_all {|el| el.surname.downcase.include?data.downcase}
     when 2
@@ -109,3 +134,6 @@ class Patient_List
   end
 
 end
+
+# list = Patient_List.new
+# p list.find_by(0, 20)

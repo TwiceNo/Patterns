@@ -40,9 +40,6 @@ class Patient
   end
 
   def self.from_json(json_string)
-    # JSON.load(json_string).each do |el, var|
-    #   self.instance_variable_set el, var
-    # end
     data = JSON.load(json_string)
     inst = self.new(surname = data["@surname"], name = data["@name"], birthdate = data["@birthdate"])
     keys = data.each_key
@@ -51,6 +48,15 @@ class Patient
     end
     if keys.include? "@id"
       inst.id = data["@id"]
+    end
+    inst
+  end
+
+  def self.from_database(data)
+    inst = self.new(surname = data[1], name = data[2], birthdate = Date.parse(data[4]).strftime("%d.%m.%Y"))
+    inst.id = data[0].to_i
+    if data[3]
+      inst.patronymic = data[3]
     end
     inst
   end
@@ -68,13 +74,8 @@ class Patient
     end
   end
 
-
-  def self.name=(name)
-    @name = self.name_set(name)
-  end
-
   def name=(name)
-    @name = self.class.name_set(name)
+    @name = Patient.name_set(name)
   end
 
   def self.name_set(name)
@@ -85,13 +86,8 @@ class Patient
     end
   end
 
-
-  def self.patronymic=(patronymic)
-    @patronymic = self.patronymic_set(patronymic)
-  end
-
   def patronymic=(patronymic)
-    @patronymic = self.class.patronymic_set(patronymic)
+    @patronymic = Patient.patronymic_set(patronymic)
   end
 
   def self.patronymic_set(patronymic)
@@ -102,13 +98,8 @@ class Patient
     end
   end
 
-
-  def self.birthdate=(date)
-    @birthdate = self.birthdate_set(date)
-  end
-
   def birthdate=(date)
-    @birthdate = self.class.birthdate_set(date)
+    @birthdate = Patient.birthdate_set(date)
   end
 
   def self.birthdate_set(date)
@@ -118,7 +109,6 @@ class Patient
       raise "Invalid date"
     end
   end
-
 
   def self.reformat(line)
     line = line.scan(/([а-я]+)|(\-+)/i).flatten.compact

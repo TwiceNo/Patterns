@@ -26,11 +26,18 @@ class Patient_List_Terminal_View
     puts "1 - Add"
     puts "2 - Show"
     puts "3 - Find"
-    puts "4 - Edit"
-    puts "5 - Delete"
-    puts "6 - Save"
-    puts "7 - Sort"
+    puts "4 - Select"
+    puts "5 - Save"
+    puts "6 - Sort"
     puts "0 - Exit"
+  end
+
+  def menu_selected
+    puts "Options"
+    puts "1 - Edit"
+    puts "2 - Delete"
+    puts "0 - Discard"
+    puts
   end
 
   def take_action
@@ -39,6 +46,11 @@ class Patient_List_Terminal_View
       puts self.act(action.to_i)
       action = gets.chomp
     end
+  end
+
+  def take_action_selected
+    action = gets.chomp
+    self.act_selected(action.to_i)
   end
 
   def act(action)
@@ -56,19 +68,50 @@ class Patient_List_Terminal_View
       end
       self.show("#{list.length} results found", list)
     when 4
-      self.select_note
-      self.edit
+      if self.select_note
+        self.show("Selected", [@patient_list.find_by(0, @patient_list.current)])
+        self.menu_selected
+        self.take_action_selected
+      else
+        "Note does not exist"
+      end
     when 5
-      self.select_note
-      @patient_list.delete
-    when 6
       self.save
-    when 7
+    when 6
       field = self.get_data(action)
       self.show("Sorted by field #{field}", @patient_list.sort_by(field))
     else
       "Invalid command"
     end
+  end
+
+  def act_selected(action)
+    case action
+    when 0
+      return
+    when 1
+      self.edit
+    when 2
+      @patient_list.delete
+      puts "Successfully deleted"
+    else
+      puts "Invalid operation"
+    end
+  end
+
+  def edit
+    self.fields_menu
+    selected = gets.chomp.split.map {|el| el.to_i}
+    data  = Array.new
+    (1..4).each do |el|
+      if selected.include? el
+        data.append(self.get_data_for_field(el))
+      else
+        data.append(nil)
+      end
+    end
+    @patient_list.edit(*data)
+    self.show("Changed to", [@patient_list.find_by(0, @patient_list.current)])
   end
 
   def get_data_for_field(action)
@@ -114,7 +157,7 @@ class Patient_List_Terminal_View
   def select_note
     puts "Select note ID"
     id = gets.chomp.to_i
-    @patients_list.set_current
+    @patient_list.set_current(id)
   end
 
   def fields_menu

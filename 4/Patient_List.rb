@@ -11,8 +11,19 @@ class Patient_List
 
   def initialize
     @filename = "data/patients.json"
-    @db_connection = DB_Connection.get_instance
-    @patients = self.read
+    @patients = self.read_from_json
+    begin
+      @db_connection = DB_Connection.get_instance
+    rescue
+    end
+  end
+
+  def connected
+    if @db_connection
+      true
+    else
+      false
+    end
   end
 
   def to_json
@@ -30,22 +41,47 @@ class Patient_List
     @patients.length
   end
 
-  def read
-    begin
-      result = @db_connection.read_patients
-      if result
-        list = Array.new()
-        result.each do |el|
-          list.append(Patient.from_database(el))
-        end
-        list
-      else
-        if not File.exist?(@filename)
-          Array.new()
-        else
-          self.from_json(File.read(@filename))
-        end
+  def check_difference
+    database = self.read_from_database.map {|el| el.to_s}
+    json = @patients.map {|el| el.to_s}
+    json_difference = json - database
+    database_difference = database - json
+    if json_difference or database_difference
+      [json_difference.length, database_difference.length]
+    end
+  end
+
+  def set_source(source)
+    if source == 2
+      @patients = self.read_from_database
+    else
+      self.alter_database
+    end
+  end
+
+  def alter_database
+    @db_connection.delete_all
+    @patients.each do |el|
+      @db_connection.add_patient(el, true)
+    end
+  end
+
+  def read_from_database
+    result = @db_connection.read_patients
+    list = Array.new()
+    if result
+      result.each do |el|
+        list.append(Patient.from_database(el))
       end
+    end
+    list
+  end
+
+  def read_from_json
+    if not File.exist?(@filename)
+      Array.new()
+    else
+      self.from_json(File.read(@filename))
     end
   end
 
@@ -62,8 +98,12 @@ class Patient_List
   def add(data)
     begin
       inst = Patient.new(*data)
-      @db_connection.add_patient(inst)
-      inst.id = @db_connection.get_id
+      if @db_connection
+        @db_connection.add_patient(inst)
+        inst.id = @db_connection.get_id
+      else
+        inst.id = @patients.length == 0 ? 1 : @patients.max {|el| el.id}.id + 1
+      end
       @patients.append(inst)
     rescue
       self.write
@@ -75,19 +115,27 @@ class Patient_List
     begin
       if surname
         self.find_by(0, @current).surname = surname
-        @db_connection.edit_patient(@current, "surname", self.find_by(0, @current).surname)
+        if @db_connection
+          @db_connection.edit_patient(@current, "surname", self.find_by(0, @current).surname)
+        end
       end
       if name
         self.find_by(0, @current).name = name
-        @db_connection.edit_patient(@current, "name", self.find_by(0, @current).name)
+        if @db_connection
+          @db_connection.edit_patient(@current, "name", self.find_by(0, @current).name)
+        end
       end
       if patronymic
         self.find_by(0, @current).patronymic = patronymic
-        @db_connection.edit_patient(@current, "patronymic", self.find_by(0, @current).patronymic)
+        if @db_connection
+          @db_connection.edit_patient(@current, "patronymic", self.find_by(0, @current).patronymic)
+        end
       end
       if birthdate
         self.find_by(0, @current).birthdate = birthdate
-        @db_connection.edit_patient(@current, "birthdate", Date.parse(self.find_by(0, @current).birthdate))
+        if @db_connection
+          @db_connection.edit_patient(@current, "birthdate", Date.parse(self.find_by(0, @current).birthdate))
+        end
       end
     rescue
     end
@@ -95,7 +143,9 @@ class Patient_List
 
   def delete
     @patients.delete(self.find_by(0, @current))
-    @db_connection.delete_patient(@current)
+    if @db_connection
+      @db_connection.delete_patient(@current)
+    end
   end
 
   def show

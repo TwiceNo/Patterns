@@ -20,13 +20,23 @@ class DB_Connection
     @connection.query("select * from patients")
   end
 
-  def add_patient(item)
-    if item.patronymic
-      query = "insert into patients (surname, name, patronymic, birthdate)
-               values ('#{item.surname}', '#{item.name}', '#{item.patronymic}', '#{Date.parse(item.birthdate)}')"
+  def add_patient(item, force=false)
+    if force
+      if item.patronymic
+        query = "insert into patients (id, surname, name, patronymic, birthdate)
+               values (#{item.id}, '#{item.surname}', '#{item.name}', '#{item.patronymic}', '#{Date.parse(item.birthdate)}')"
+      else
+        query = "insert into patients (id, surname, name, birthdate)
+               values (#{item.id}, '#{item.surname}', '#{item.name}', '#{Date.parse(item.birthdate)}')"
+      end
     else
-      query = "insert into patients (surname, name, birthdate)
+      if item.patronymic
+        query = "insert into patients (surname, name, patronymic, birthdate)
+               values ('#{item.surname}', '#{item.name}', '#{item.patronymic}', '#{Date.parse(item.birthdate)}')"
+      else
+        query = "insert into patients (surname, name, birthdate)
                values ('#{item.surname}', '#{item.name}', '#{Date.parse(item.birthdate)}')"
+      end
     end
     @connection.query(query)
     @connection.commit
@@ -39,6 +49,11 @@ class DB_Connection
 
   def delete_patient(id)
     @connection.query("delete from patients where id = #{id}")
+    @connection.commit
+  end
+
+  def delete_all
+    @connection.query("delete from patients where 1")
     @connection.commit
   end
 

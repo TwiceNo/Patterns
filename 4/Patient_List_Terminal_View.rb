@@ -16,8 +16,46 @@ class Patient_List_Terminal_View
 
   def initialize
     @patient_list = Patient_List.new
+    if @patient_list.connected
+      dif = @patient_list.check_difference
+      if dif != [0, 0]
+        source = self.choose_source(*dif)
+        if source
+          @patient_list.set_source(source)
+          self.start
+        end
+      else
+        self.start
+      end
+    else
+      self.warning
+      self.start
+    end
+  end
+
+  def warning
+    warn "Cannot connect to database"
+  end
+
+  def start
     self.menu
     self.take_action
+  end
+
+  def choose_source(json, database)
+    puts "Was found difference in source files"
+    puts "JSON file has #{json} new or altered notes"
+    puts "Database has #{database} new or altered notes"
+    puts
+    puts "With which source program should work?"
+    puts "1 - JSON"
+    puts "2 - Database"
+    action = gets.chomp.to_i
+    if (1..2).include? action
+      action
+    else
+      puts "Invalid source"
+    end
   end
 
   def menu
@@ -46,6 +84,7 @@ class Patient_List_Terminal_View
       puts self.act(action.to_i)
       action = gets.chomp
     end
+    self.save
   end
 
   def take_action_selected
@@ -169,7 +208,7 @@ class Patient_List_Terminal_View
     puts "4 - Birthdate"
   end
 
-  def show(message="Patients List", list=nil, limit=10, show_all=false)
+  def show(message="Patients List", list=nil, limit=30, show_all=false)
     puts message
     puts
     if not list
